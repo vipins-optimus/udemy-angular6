@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Recipe } from './recipe.moel';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class RecipeService {
+	recipesChanged = new Subject;
 
 	constructor(private shoppingListService:ShoppingListService) {
-		
 	}
 
 	recipes: Recipe[] = [
@@ -23,8 +24,8 @@ export class RecipeService {
 			'This is simply a test',
 			'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Handi-chicken-Indian-dum-chicken-curry-recipe.jpg/800px-Handi-chicken-Indian-dum-chicken-curry-recipe.jpg',
 			[
-				new Ingredient('Meat', 1),
-				new Ingredient('French Fries', 20)
+				new Ingredient('Bonus', 12),
+				new Ingredient('French Fries', 76)
 			])
 	];
 
@@ -38,5 +39,15 @@ export class RecipeService {
 
 	AddIngredientToShoppingList(ingredients: Ingredient[]) {
 		this.shoppingListService.addIngredients(ingredients);
+	}
+
+	addRecipe(recipe: Recipe) {
+		this.recipes.push(recipe);
+		this.recipesChanged.next(this.recipes.slice());
+	}
+
+	updateRecipe(index: number, newRecipe: Recipe) {
+		this.recipes[index] = newRecipe;
+		this.recipesChanged.next(this.recipes.slice());
 	}
 }
