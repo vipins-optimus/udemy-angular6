@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 export class RecipeService {
 	recipesChanged = new Subject;
 
-	constructor(private shoppingListService:ShoppingListService) {
+	constructor(private shoppingListService: ShoppingListService) {
 	}
 
 	recipes: Recipe[] = [
@@ -48,6 +48,11 @@ export class RecipeService {
 
 	updateRecipe(index: number, newRecipe: Recipe) {
 		this.recipes[index] = newRecipe;
+		this.recipesChanged.next(this.recipes.slice());
+	}
+
+	deleteRecipe(index: number) {
+		this.recipes.splice(index, 1);
 		this.recipesChanged.next(this.recipes.slice());
 	}
 }
